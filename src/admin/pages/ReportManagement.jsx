@@ -18,10 +18,10 @@ export default function ReportManagement() {
       try {
         const token = localStorage.getItem('accessToken');
         const [commentsRes, usersRes] = await Promise.all([
-          axios.get(`${API_URL}/reports/comments`, {
+          axios.get(`${API_URL}/admin/repoted-comments`, { // /api/admin/repoted-comments
             headers: { Authorization: `Bearer ${token}` },
           }),
-          axios.get(`${API_URL}/reports/users`, {
+          axios.get(`${API_URL}/admin/repoted-users`, { // /api/admin/repoted-users
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);
@@ -65,23 +65,12 @@ export default function ReportManagement() {
 
   const handleBlockUser = async (id) => {
     try {
-      await axios.patch(`${API_URL}/admin/users/${id}/block`, null, {
+      await axios.put(`${API_URL}/admin/block-user/${id}`, null, { // /api/admin/block-user/68663d8ae6abd06ebfb328c8
         headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
       });
       setReportedUsers(reportedUsers.filter((u) => u.id !== id));
     } catch (err) {
       console.error('Failed to block user:', err);
-    }
-  };
-
-  const handleDismissUserReport = async (id) => {
-    try {
-      await axios.delete(`${API_URL}/reports/users/${id}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
-      });
-      setReportedUsers(reportedUsers.filter((u) => u.id !== id));
-    } catch (err) {
-      console.error('Failed to dismiss report:', err);
     }
   };
 
@@ -171,12 +160,6 @@ export default function ReportManagement() {
                         className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 flex items-center gap-1"
                       >
                         <MdBlock /> Block
-                      </button>
-                      <button
-                        onClick={() => handleDismissUserReport(user.id)}
-                        className="px-3 py-1 bg-gray-300 text-gray-800 rounded text-sm hover:bg-gray-400"
-                      >
-                        Dismiss
                       </button>
                     </td>
                   </tr>
