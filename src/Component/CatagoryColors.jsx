@@ -1,0 +1,26 @@
+const tagColors = {
+  technology: 'bg-blue-100 text-blue-800',
+  health: 'bg-cyan-100 text-cyan-800',
+  education: 'bg-yellow-100 text-yellow-800',
+  fitness: 'bg-teal-100 text-teal-800',
+  finance: 'bg-green-200 text-green-900',
+  pets: 'bg-pink-100 text-pink-800',
+  'food and beverages': 'bg-red-100 text-red-800',
+  entertainment: 'bg-purple-100 text-purple-800',
+  travel: 'bg-orange-100 text-orange-800',
+  marketing: 'bg-indigo-100 text-indigo-800',
+  agriculture: 'bg-lime-100 text-lime-800',
+  ecommerce: 'bg-emerald-100 text-emerald-800',
+  environment: 'bg-green-100 text-green-800',
+  transportation: 'bg-sky-100 text-sky-800',
+  'real estate': 'bg-stone-100 text-stone-800',
+  hospitality: 'bg-rose-100 text-rose-800',
+  'social impact': 'bg-slate-100 text-slate-800',
+  'artificial intelligence': 'bg-fuchsia-100 text-fuchsia-800',
+  gaming: 'bg-violet-100 text-violet-800',
+  manufacturing: 'bg-zinc-100 text-zinc-800',
+  logistics: 'bg-amber-100 text-amber-800',
+  other: 'bg-gray-100 text-gray-800',
+};
+
+export default tagColors;
