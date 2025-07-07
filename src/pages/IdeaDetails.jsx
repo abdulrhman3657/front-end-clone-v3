@@ -17,6 +17,7 @@ import { voteOnComment } from "../services/comments.service";
 import RequestMeetingModal from "../Component/RequestMeetingModal";
 import { scheduleMeeting } from "../services/zoom.service";
 import { FaStar } from "react-icons/fa";
+import { IoCalendarOutline } from "react-icons/io5";
 
 export default function IdeaDetails() {
   const { id } = useParams();
@@ -180,12 +181,12 @@ export default function IdeaDetails() {
 
   return (
     <>
-      <Link
+    {/*   <Link
         to="/AllIdeas"
-        className="flex items-center gap-1 text-blue-600 hover:text-blue-800"
+        className="flex items-center gap-1 mt-2 text-blue-600 hover:text-blue-800"
       >
         <IoIosArrowBack /> Back
-      </Link>
+      </Link> */}
 
       <div className="mx-auto px-4 py-10 space-y-6">
         {/* Idea Card */}
@@ -225,7 +226,7 @@ export default function IdeaDetails() {
                 className={`p-2 rounded-full transition ${
                   voteStatus === "up"
                     ? "bg-green-100 text-green-700"
-                    : "bg-gray-100 text-green-600 hover:bg-green-50"
+                    : "bg-gray-100 text-green-600 hover:bg-green-200"
                 }`}
                 aria-label="Upvote"
               >
@@ -242,7 +243,7 @@ export default function IdeaDetails() {
                 className={`p-2 rounded-full transition ${
                   voteStatus === "down"
                     ? "bg-red-100 text-red-700"
-                    : "bg-gray-100 text-red-600 hover:bg-red-50"
+                    : "bg-gray-100 text-red-600 hover:bg-red-300"
                 }`}
                 aria-label="Downvote"
               >
@@ -333,13 +334,13 @@ export default function IdeaDetails() {
                       setTargetType("comment");
                       setShowModal(true);
                     }}
-                    className="mt-3 text-sm text-blue-600 px-3 py-1 rounded "
+                    className="flex gap-1 items-center  text-sm text-blue-600  rounded-full bg-gray-100  px-1 py-1 "
                   >
-                    Request Meeting
+                  <IoCalendarOutline  />  
                   </button>
                 )}
                 <button
-                  className="p-1.5 rounded-full bg-gray-100 text-green-600 hover:bg-green-50"
+                  className="p-1.5 rounded-full bg-gray-100 text-green-600 hover:bg-green-200"
                   aria-label="upvote"
                   onClick={() => handleCommentVote(comment.id, 1)}
                 >
@@ -349,7 +350,7 @@ export default function IdeaDetails() {
                   {comment.upvotes}
                 </span>
                 <button
-                  className="p-1.5 rounded-full bg-gray-100 text-red-600 hover:bg-red-50"
+                  className="p-1.5 rounded-full bg-gray-100 text-red-600 hover:bg-red-200"
                   aria-label="downvote"
                   onClick={() => handleCommentVote(comment.id, -1)}
                 >
