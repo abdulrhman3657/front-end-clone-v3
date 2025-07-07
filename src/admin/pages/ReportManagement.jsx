@@ -8,13 +8,13 @@ export default function ReportManagement() {
   const [search, setSearch] = useState('');
 
   const reportedComments = [
-    { id: 1, content: 'This is offensive', reporter: 'user1@example.com', commentId: 'c123' },
-    { id: 2, content: 'Spam content here', reporter: 'user2@example.com', commentId: 'c456' },
+    { id: 1, comment: 'This is offensive', reporter: 'user1@example.com', commentId: 'c123' },
+    { id: 2, comment: 'Spam content here', reporter: 'user2@example.com', commentId: 'c456' },
   ];
 
   const reportedUsers = [
-    { id: 1, name: 'ToxicUser', email: 'toxic@example.com', reason: 'Harassment', reporter: 'mod@example.com' },
-    { id: 2, name: 'SpamBot', email: 'spam@example.com', reason: 'Spamming links', reporter: 'admin@example.com' },
+    { id: 1, name: 'ToxicUser', email: 'toxic@example.com', commentId: 'c789', reporter: 'mod@example.com' },
+    { id: 2, name: 'SpamBot', email: 'spam@example.com', commentId: 'c101', reporter: 'admin@example.com' },
   ];
 
   const handleDeleteComment = (id) => {
@@ -47,7 +47,7 @@ export default function ReportManagement() {
             <thead className="bg-gray-100 text-gray-700">
               <tr>
                 <th className="px-4 py-2">Reporter</th>
-                <th className="px-4 py-2">Content</th>
+                <th className="px-4 py-2">Comment</th>
                 <th className="px-4 py-2">Comment ID</th>
                 <th className="px-4 py-2">Actions</th>
               </tr>
@@ -56,7 +56,7 @@ export default function ReportManagement() {
               {reportedComments.map((report) => (
                 <tr key={report.id} className="border-b border-gray-300">
                   <td className="px-4 py-2">{report.reporter}</td>
-                  <td className="px-4 py-2 text-gray-700">{report.content}</td>
+                  <td className="px-4 py-2 text-gray-700">{report.comment}</td>
                   <td className="px-4 py-2 text-gray-500">{report.commentId}</td>
                   <td className="px-4 py-2 space-x-2">
                     <button
@@ -85,7 +85,7 @@ export default function ReportManagement() {
               <tr>
                 <th className="px-4 py-2">User</th>
                 <th className="px-4 py-2">Email</th>
-                <th className="px-4 py-2">Reason</th>
+                <th className="px-4 py-2">Comment ID</th>
                 <th className="px-4 py-2">Reported By</th>
                 <th className="px-4 py-2">Actions</th>
               </tr>
@@ -95,7 +95,7 @@ export default function ReportManagement() {
                 <tr key={user.id} className="border-b border-gray-300">
                   <td className="px-4 py-2 font-medium">{user.name}</td>
                   <td className="px-4 py-2 text-gray-600">{user.email}</td>
-                  <td className="px-4 py-2 text-gray-700">{user.reason}</td>
+                  <td className="px-4 py-2 text-gray-700">{user.commentId}</td>
                   <td className="px-4 py-2 text-gray-500">{user.reporter}</td>
                   <td className=" flex gap-1 px-4 py-2 space-x-2">
                     <button
