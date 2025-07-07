@@ -37,13 +37,15 @@ export default function ReportManagement() {
           count: r.count,
         }));
 
-        const formattedUsers = (usersRes.data.data || []).map((u) => ({
-          id: u.id || u._id,
-          name: u.name,
-          email: u.email,
-          reportCount: u.reportCount,
-          blocked: u.blocked,
-        }));
+        const formattedUsers = (usersRes.data.data || [])
+          .map((u) => ({
+            id: u.id || u._id,
+            name: u.name,
+            email: u.email,
+            reportCount: u.reportCount,
+            blocked: u.blocked,
+          }))
+          .filter((u) => !u.blocked);
 
         setReportedComments(formattedComments);
         setReportedUsers(formattedUsers);
@@ -73,7 +75,7 @@ export default function ReportManagement() {
       await axios.put(`${API_URL}/admin/block-user/${id}`, null, { // /api/admin/block-user/68663d8ae6abd06ebfb328c8
         headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
       });
-      setReportedUsers(reportedUsers.filter((u) => u.id !== id));
+      setReportedUsers((prev) => prev.filter((u) => u.id !== id));
     } catch (err) {
       console.error('Failed to block user:', err);
     }
