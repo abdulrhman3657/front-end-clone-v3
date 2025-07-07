@@ -28,6 +28,11 @@ export default function ReportManagement() {
 
         const formattedComments = (commentsRes.data.data || []).map((r) => ({
           id: r.comment?._id || r._id,
+          userId:
+            r.comment?.userId ||
+            r.comment?.user?._id ||
+            r.userId ||
+            '',
           text: r.comment?.text || '',
           count: r.count,
         }));
@@ -94,17 +99,18 @@ export default function ReportManagement() {
                 <th className="px-4 py-2">Comment</th>
                 <th className="px-4 py-2">Reports</th>
                 <th className="px-4 py-2">Comment ID</th>
+                <th className="px-4 py-2">User ID</th>
                 <th className="px-4 py-2">Actions</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="4" className="text-center py-4 text-gray-500">Loading...</td>
+                  <td colSpan="5" className="text-center py-4 text-gray-500">Loading...</td>
                 </tr>
               ) : reportedComments.length === 0 ? (
                 <tr>
-                  <td colSpan="4" className="text-center py-4 text-gray-500">No comment reports found.</td>
+                  <td colSpan="5" className="text-center py-4 text-gray-500">No comment reports found.</td>
                 </tr>
               ) : (
                 reportedComments.map((report) => (
@@ -112,6 +118,7 @@ export default function ReportManagement() {
                     <td className="px-4 py-2 text-gray-700">{report.text}</td>
                     <td className="px-4 py-2">{report.count}</td>
                     <td className="px-4 py-2 text-gray-500">{report.id}</td>
+                    <td className="px-4 py-2 text-gray-500">{report.userId}</td>
                     <td className="px-4 py-2 space-x-2">
                       <button
                         onClick={() => handleDeleteComment(report.id)}
