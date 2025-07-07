@@ -31,8 +31,8 @@ export default function ManageComments() {
 
         const userMap = {};
         usersRes.data.data.forEach((user) => {
-          const id = String(user._id);
-          userMap[id] = user.name;
+          const id = String(user.id);
+          userMap[id] = { name: user.name, email: user.email };
         });
         setUsersMap(userMap);
 
@@ -62,14 +62,14 @@ export default function ManageComments() {
 
         // Format comments
         const formatted = commentsRes.data.data.map((c) => {
-          const userId = String(c.userId || c.user?._id);
+          const userId = String(c.userId || c.user?.id);
           const ideaId = String(c.ideaId);
 
           return {
             id: c._id,
             userId,
-            userName: userMap[userId] || "Unknown User",
-            userEmail: c.user?.email || "N/A",
+            userName: userMap[userId]?.name || "Unknown User",
+            userEmail: userMap[userId]?.email || c.user?.email || "N/A",
             comment: c.text,
             ideaTitle: ideaMap[ideaId]?.title || "Untitled Idea",
             ideaId: ideaId,
