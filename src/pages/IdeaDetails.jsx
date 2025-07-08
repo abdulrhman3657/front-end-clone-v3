@@ -6,6 +6,7 @@ import { useParams, Link } from "react-router";
 import { fetchIdeaById } from "../services/ideas.service";
 import { fetchUserVote } from "../services/ideas.service";
 import { voteIdea } from "../services/ideas.service";
+import { reportComment } from "../services/ideas.service";
 import { fetchCommentsByIdeaId, postComment } from "../services/comments.service";
 import { voteOnComment } from "../services/comments.service";
 import { getCurrentUser } from "../services/auth.service";
@@ -195,6 +196,15 @@ export default function IdeaDetails() {
         "Error voting on comment:",
         err?.response?.data?.message || err.message
       );
+    }
+  };
+
+  const handleReport = async (commentId) => {
+    try {
+      await reportComment(commentId);
+      setShowReport(null);
+    } catch (err) {
+      console.error("Failed to report comment:", err);
     }
   };
 
