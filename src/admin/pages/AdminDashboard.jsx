@@ -18,6 +18,8 @@ export default function AdminDashboard() {
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [ideas, setIdeas] = useState([]);
+  const [loadingIdeas, setLoadingIdeas] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,7 +31,25 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     fetchUsers();
+    fetchIdeas();
   }, []);
+
+  const fetchIdeas = async () => {
+    try {
+      setLoadingIdeas(true);
+      const response = await axios.get(`${API_URL}ideas`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      });
+      setIdeas(response.data.data || []);
+    } catch (error) {
+      console.error("Error fetching ideas:", error);
+      toast.error("Failed to load ideas");
+    } finally {
+      setLoadingIdeas(false);
+    }
+  };
 
   const fetchUsers = async () => {
     try {
@@ -76,6 +96,32 @@ export default function AdminDashboard() {
 
           setUsers(users.filter((u) => u.id !== userId));
           Swal.fire("Deleted!", "User has been deleted.", "success");
+        } catch (err) {
+          Swal.fire("Error", err.message, "error");
+        }
+      }
+    });
+  };
+
+  const handleDeleteIdea = (ideaId) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This idea will be permanently deleted!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios.delete(`${API_URL}ideas/${ideaId}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          });
+          setIdeas(ideas.filter((i) => i._id !== ideaId));
+          Swal.fire("Deleted!", "Idea has been deleted.", "success");
         } catch (err) {
           Swal.fire("Error", err.message, "error");
         }
@@ -178,6 +224,51 @@ export default function AdminDashboard() {
         )}
       </div>
 
+      {/* Ideas Table */}
+      <div className="bg-white p-4 rounded-lg shadow overflow-hidden mt-8">
+        <h2 className="text-md sm:text-lg font-semibold mb-4">All Ideas</h2>
+        {loadingIdeas ? (
+          <p className="text-center py-4">Loading ideas...</p>
+        ) : (
+          <div className="overflow-x-auto" role="region">
+            <table className="w-full text-sm text-left table-auto">
+              <thead className="bg-gray-100 text-gray-700">
+                <tr>
+                  <th className="px-4 py-2 min-w-[150px]">Title</th>
+                  <th className="px-4 py-2 min-w-[120px]">Category</th>
+                  <th className="px-4 py-2 min-w-[150px]">Founder</th>
+                  <th className="px-4 py-2 min-w-[120px]">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {ideas.map((idea) => (
+                  <tr key={idea._id} className="border-b border-gray-400">
+                    <td className="px-4 py-2">{idea.title}</td>
+                    <td className="px-4 py-2">{idea.category}</td>
+                    <td className="px-4 py-2">{idea.founderId?.name || "-"}</td>
+                    <td className="px-4 py-2 whitespace-nowrap">
+                      <button
+                        onClick={() => handleDeleteIdea(idea._id)}
+                        className="flex gap-1 px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700"
+                      >
+                        <RiDeleteBin6Line className="mt-1+" /> Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+                {ideas.length === 0 && (
+                  <tr>
+                    <td colSpan="4" className="text-center py-4 text-gray-500">
+                      No ideas found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
     </div></>
   );
 }
@@ -188,5 +279,4 @@ function StatCard({ title, count }) {
       <h3 className="text-sm text-gray-600 mb-1">{title}</h3>
       <p className="text-2xl font-bold">{count}</p>
     </div>
-  );
-}
+  );}
