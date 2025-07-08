@@ -43,82 +43,92 @@ export default function MyIdeas() {
         <h3 className="font-semibold text-lg">Your Submitted Ideas</h3>
         <Link
           to={"/submitIdea"}
-          className="bg-yellow-400 text-white px-4 py-2 text-sm rounded-md hover:bg-yellow-500"
+          className="bg-[#1E40AF] text-white px-4 py-2 text-sm rounded-md hover:bg-yellow-500"
         >
           Add Idea +
         </Link>
       </div>
 
       {loading ? (
-        <div class="flex justify-center items-center gap-2 min-h-screen max-w-screen ">
-          <div class="w-4 h-4 rounded-full bg-blue-700 animate-bounce [animation-delay:.7s]"></div>
-          <div class="w-4 h-4 rounded-full bg-blue-700 animate-bounce [animation-delay:.3s]"></div>
-          <div class="w-4 h-4 rounded-full bg-blue-700 animate-bounce [animation-delay:.7s]"></div>
+        <div className="flex justify-center items-center gap-2 min-h-screen max-w-screen ">
+          <div className="w-4 h-4 rounded-full bg-blue-700 animate-bounce [animation-delay:.7s]"></div>
+          <div className="w-4 h-4 rounded-full bg-blue-700 animate-bounce [animation-delay:.3s]"></div>
+          <div className="w-4 h-4 rounded-full bg-blue-700 animate-bounce [animation-delay:.7s]"></div>
         </div>
       ) : error ? (
         <p className="text-center text-red-500 text-sm">{error}</p>
       ) : ideas.length === 0 ? (
         <p className="text-center text-sm">No ideas found.</p>
       ) : (
-        <div className="space-y-4 mb-12">
-          {ideas.map((idea) => (
-            <div
-              key={idea._id}
-              className="bg-white border border-gray-200 rounded-md p-4 flex justify-between items-start"
-            >
-              <div>
-                <div className="flex gap-2 ">
-                  <h4 className="font-medium text-base mb-1">{idea.title}</h4>{" "}
-                  <span className="flex items-center text-amber-400 font-medium">
-                    <GoArrowUp className="mr-1" /> {idea.totalUpvotes}
-                  </span>
-                </div>
-                <p className="text-sm text-gray-600 mb-2">{idea.description}</p>
-                <div className="flex items-center gap-2 text-sm">
-                  {idea.category && (
-                    <span
-                      className={`${
-                        tagColors[idea.category.toLowerCase()] ||
-                        "bg-gray-200 text-gray-700"
-                      } px-2 py-1 rounded-full text-xs`}
-                    >
-                      {idea.category}
-                    </span>
-                  )}
-                </div>
-              </div>
-              <div className="relative">
-                <button
-                  className="text-gray-500 hover:text-gray-700"
-                  onClick={() =>
-                    setActiveMenu(activeMenu === idea._id ? null : idea._id)
-                  }
-                >
-                  <BiDotsVerticalRounded size={20} />
-                </button>
-                {activeMenu === idea._id && (
-                  <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 shadow-md rounded-md z-10">
-                    <Link
-                      to={`/detailIdea/${idea._id}`}
-                      className="block w-full px-4 py-2 text-sm text-left hover:bg-gray-1200"
-                    >
-                      View Detail
-                    </Link>
-                    <Link
-                      to={`/IdeaAnalysis/${idea._id}`}
-                      className="block w-full px-4 py-2 text-sm text-left hover:bg-gray-100"
-                    >
-                      Analysis
-                    </Link>
-                    <button className="block w-full px-4 py-2 text-sm text-left text-red-600 hover:bg-gray-100">
-                      Delete
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
+<div className="space-y-4 mb-12 flex flex-col-reverse gap-3">
+  {ideas.map((idea) => (
+    <div
+      key={idea._id}
+      className="bg-white rounded-md p-4 flex justify-between items-start shadow-sm border border-gray-100"
+    >
+      <div className="flex-1 w-full pr-4">
+        {/* Title + Upvotes */}
+        <div className="flex justify-between items-start mb-1">
+          <h4 className="font-semibold text-base text-gray-900">{idea.title}</h4>
+          <span className="flex items-center text-amber-400 text-sm font-medium">
+            <GoArrowUp className="mr-1" />
+            {idea.totalUpvotes}
+          </span>
         </div>
+
+        {/* Description */}
+        <p className="text-sm text-gray-600 mb-2 line-clamp-1">
+          {idea.description}
+        </p>
+
+        {/* Tag */}
+        {idea.category && (
+          <span
+            className={`${
+              tagColors[idea.category.toLowerCase()] ||
+              "bg-gray-200 text-gray-700"
+            } px-3 py-1 rounded-full text-xs font-medium inline-block`}
+          >
+            {idea.category}
+          </span>
+        )}
+      </div>
+
+      <div className="relative">
+        <button
+          className="text-gray-400 hover:text-gray-600"
+          onClick={() =>
+            setActiveMenu(activeMenu === idea._id ? null : idea._id)
+          }
+        >
+          <BiDotsVerticalRounded size={20} />
+        </button>
+
+        {activeMenu === idea._id && (
+          <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 shadow-md rounded-md z-10">
+            <Link
+              to={`/detailIdea/${idea._id}`}
+              className="block w-full px-4 py-2 text-sm text-left hover:bg-gray-100"
+            >
+              View Detail
+            </Link>
+            <Link
+              to={`/IdeaAnalysis/${idea._id}`}
+              className="block w-full px-4 py-2 text-sm text-left hover:bg-gray-100"
+            >
+              Analysis
+            </Link>
+            <button className="block w-full px-4 py-2 text-sm text-left text-red-600 hover:bg-gray-100">
+              Delete
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  ))}
+</div>
+
+
       )}
     </div>
   );
