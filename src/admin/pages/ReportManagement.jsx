@@ -11,6 +11,7 @@ export default function ReportManagement() {
   const [search, setSearch] = useState('');
   const [reportedComments, setReportedComments] = useState([]);
   const [reportedUsers, setReportedUsers] = useState([]);
+  const [blockedUsers, setBlockedUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -37,18 +38,20 @@ export default function ReportManagement() {
           count: r.count,
         }));
 
-        const formattedUsers = (usersRes.data.data || [])
-          .map((u) => ({
-            id: u.id || u._id,
-            name: u.name,
-            email: u.email,
-            reportCount: u.reportCount,
-            blocked: u.blocked,
-          }))
-          .filter((u) => !u.blocked);
+        const allUsers = (usersRes.data.data || []).map((u) => ({
+          id: u.id || u._id,
+          name: u.name,
+          email: u.email,
+          reportCount: u.reportCount,
+          blocked: u.blocked,
+        }));
+
+        const formattedUsers = allUsers.filter((u) => !u.blocked);
+        const blocked = allUsers.filter((u) => u.blocked);
 
         setReportedComments(formattedComments);
         setReportedUsers(formattedUsers);
+        setBlockedUsers(blocked);
       } catch (err) {
         console.error('Error fetching reports:', err);
       } finally {
@@ -78,6 +81,17 @@ export default function ReportManagement() {
       setReportedUsers((prev) => prev.filter((u) => u.id !== id));
     } catch (err) {
       console.error('Failed to block user:', err);
+    }
+  };
+
+  const handleUnblockUser = async (id) => {
+    try {
+      await axios.put(`${API_URL}/admin/unblock-user/${id}`, null, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
+      });
+      setBlockedUsers((prev) => prev.filter((u) => u.id !== id));
+    } catch (err) {
+      console.error('Failed to unblock user:', err);
     }
   };
 
@@ -169,6 +183,48 @@ export default function ReportManagement() {
                         className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 flex items-center gap-1"
                       >
                         <MdBlock /> Block
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Blocked Users */}
+        <div className="bg-white p-4 rounded-lg shadow mt-10">
+          <h2 className="text-lg font-semibold mb-4">Blocked Users</h2>
+          <table className="w-full text-sm text-left table-auto">
+            <thead className="bg-gray-100 text-gray-700">
+              <tr>
+                <th className="px-4 py-2">User</th>
+                <th className="px-4 py-2">Email</th>
+                <th className="px-4 py-2">Reports</th>
+                <th className="px-4 py-2">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td colSpan="4" className="text-center py-4 text-gray-500">Loading...</td>
+                </tr>
+              ) : blockedUsers.length === 0 ? (
+                <tr>
+                  <td colSpan="4" className="text-center py-4 text-gray-500">No blocked users found.</td>
+                </tr>
+              ) : (
+                blockedUsers.map((user) => (
+                  <tr key={user.id} className="border-b border-gray-300">
+                    <td className="px-4 py-2 font-medium">{user.name}</td>
+                    <td className="px-4 py-2 text-gray-600">{user.email}</td>
+                    <td className="px-4 py-2 text-gray-700">{user.reportCount}</td>
+                    <td className="flex gap-1 px-4 py-2 space-x-2">
+                      <button
+                        onClick={() => handleUnblockUser(user.id)}
+                        className="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700 flex items-center gap-1"
+                      >
+                        Unblock
                       </button>
                     </td>
                   </tr>
