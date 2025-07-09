@@ -4,7 +4,8 @@ import { FiEdit3 } from "react-icons/fi";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import tagColors from "../Component/CatagoryColors";
 import { Link } from "react-router";
-import { fetchMyIdeas } from "../services/ideas.service";
+import { fetchMyIdeas, deleteIdea } from "../services/ideas.service";
+import Swal from "sweetalert2";
 
 export default function MyIdeas() {
   const [showPopup, setShowPopup] = useState(false);
@@ -12,6 +13,31 @@ export default function MyIdeas() {
   const [ideas, setIdeas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const handleDelete = async (id) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "This idea will be permanently deleted!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
+      reverseButtons: true,
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await deleteIdea(id);
+        setIdeas(ideas.filter((idea) => idea._id !== id));
+        Swal.fire("Deleted!", "Idea has been deleted.", "success");
+      } catch (err) {
+        console.error("Delete failed:", err);
+        Swal.fire("Error", "Failed to delete idea.", "error");
+      }
+    }
+  };
 
   useEffect(() => {
     const loadIdeas = async () => {
@@ -118,7 +144,10 @@ export default function MyIdeas() {
             >
               Analysis
             </Link>
-            <button className="block w-full px-4 py-2 text-sm text-left text-red-600 hover:bg-gray-100">
+            <button
+              className="block w-full px-4 py-2 text-sm text-left text-red-600 hover:bg-gray-100"
+              onClick={() => handleDelete(idea._id)}
+            >
               Delete
             </button>
           </div>

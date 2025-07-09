@@ -41,6 +41,13 @@ export const fetchMyIdeas = async () => {
   return res.data.data;
 };
 
+export const deleteIdea = async (ideaId) => {
+  const res = await axios.delete(`${API}/ideas/${ideaId}`, {
+    withCredentials: true,
+  });
+  return res.data;
+};
+
 export const fetchIdeaAnalytics = async (ideaId) => {
   const res = await axios.get(`${API}/ideas/analytics/${ideaId}`, { // //:id
     withCredentials: true,
@@ -55,5 +62,4 @@ export const reportComment = async (commentId) => {
     { commentId },
     { withCredentials: true }
   );
-  return res.data;
-};
+  return res.data;};
